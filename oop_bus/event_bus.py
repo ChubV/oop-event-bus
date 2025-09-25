@@ -12,10 +12,14 @@ class EventBus:
 
     def listen(self, listener: EventListener):
         event_name = listener.get_event_name()
-        if event_name not in self.__listeners:
-            self.__listeners[event_name] = []
+        event_names = listener.get_event_names()
+        if event_name:
+            event_names.append(event_name)
+        for name in event_names:
+            if name not in self.__listeners:
+                self.__listeners[name] = []
 
-        self.__listeners[event_name].append(listener)
+            self.__listeners[name].append(listener)
 
     async def dispatch(self, event: Event):
         if event.get_name() not in self.__listeners:

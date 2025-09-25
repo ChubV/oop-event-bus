@@ -42,10 +42,31 @@ Dispatch an event
 await event_bus.dispatch(UserSignedIn(user.email))
 ```
 
-Why?
+### Multi-listener
+
+It is possible to register the listener to be called
+for more than one event:
+
+```python
+class MyMultiEventListener(MultiEventListener):
+    def get_event_names(self) -> List[str]:
+        return [TestEvent.__name__, TestEvent2.__name__]
+
+    async def on_test_event(self, event: TestEvent):
+        ...
+    
+    async def on_test_event2(self, event: TestEvent2):
+        ...
+
+...
+event_bus.listen(MyMultiEventListener())
+event_bus.dispatch(TestEvent2(...))
+```
+
+Example
 ===
 
-Lets imagine the following code:
+Given the following code:
 
 ```python
 class SomethingService:
@@ -68,8 +89,8 @@ class SomethingService:
         await self.marketing.increase_marketing_counter()
 ```
 
-We have SRP breaks, and a number of side effects unrelated to the business problem. This code is hard to test, it 
-couples `SomethingService` with the concrete implementations of logging, mailing and marketing services.
+There are SRP breaks, and a number of side effects unrelated to the business problem. This code is hard to test, it 
+couples the `SomethingService` with the concrete implementations of logging, mailing and marketing services.
 
 With `oop-event-bus` you can move all side effects and unrelated code out. 
 Also, you will make it possible to extend functionality later without changing the code of this method.
