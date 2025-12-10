@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from .event import Event
 from .event_listener import EventListener
@@ -7,8 +7,12 @@ from .event_listener import EventListener
 class EventBus:
     __listeners: Dict[str, List[EventListener]]
 
-    def __init__(self):
+    def __init__(self, listeners: Optional[List[EventListener]] = None) -> None:
         self.__listeners = {}
+        if not listeners:
+            return
+        for listener in listeners:
+            self.listen(listener)
 
     def listen(self, listener: EventListener):
         event_name = listener.get_event_name()

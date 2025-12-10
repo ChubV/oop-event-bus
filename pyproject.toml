@@ -41,4 +41,4 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 80
 target-version = "py39"
-extend-select = ["B", "I"]
+lint.extend-select = ["B", "I"]
